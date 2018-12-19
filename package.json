@@ -1,0 +1,31 @@
+{
+  "name": "home-automation",
+  "version": "0.0.1",
+  "description": "Automate my smart home devices",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "mkdir -p dist && webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:kytart/HomeAutomation.git"
+  },
+  "keywords": [
+    "home",
+    "smart",
+    "home",
+    "automation"
+  ],
+  "author": "Michal Artazov <michal@artazov.cz>",
+  "license": "ISC",
+  "dependencies": {
+    "tplink-smarthome-api": "^0.23.1"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.17",
+    "awesome-typescript-loader": "^5.2.1",
+    "typescript": "^3.2.2",
+    "webpack": "^4.28.0",
+    "webpack-cli": "^3.1.2"
+  }
+}
