@@ -4,7 +4,7 @@ const path = require('path');
 const env = process.env.NODE_ENV || 'dev';
 
 module.exports = {
-    entry: './src/index',
+    entry: './src/server',
     target: 'node',
     mode: env === 'production' ? 'production' : 'development',
     node: {
@@ -13,7 +13,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'index.js'
+        filename: 'server.js'
     },
     devtool: 'source-map',
     plugins: [
