@@ -1,5 +1,10 @@
 # My home automation
 
+```
+docker build -t home-automation .
+docker run -d --restart unless-stopped --name home_automation -e HEATER_IPS='<ip1>,<ip2>' -p 8080:8080 home-automation
+```
+
 ## Temperature
 
 I don't have a thermostat, only electric heaters, which I made smart with TP-Link smart plugs.
