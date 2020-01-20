@@ -1,27 +1,22 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import { ResolveTemperatureCallback } from './temperature';
+import Thermostat from './Thermostat';
 
 export function route(
 	app: express.Application,
-	resolveTemperature: ResolveTemperatureCallback,
+	thermostat: Thermostat,
 ) {
 	app.use('/client', express.static('dist/client'));
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: true }));
 
-	app.post('/temperature', async (request: express.Request, response: express.Response) => {
-		const { current, desired } = request.body;
-		if (typeof current === 'undefined' || typeof desired === 'undefined') {
+	app.post('/temperature', (request: express.Request, response: express.Response) => {
+		const { temperature } = request.body;
+		if (typeof temperature === 'undefined') {
 			response.sendStatus(400);
 		} else {
-			try {
-				await resolveTemperature(current, desired);
-				response.sendStatus(200);
-			} catch (error) {
-				console.error('Resolve temperature failed', error);
-				response.sendStatus(500);
-			}
+			thermostat.setTemperature(temperature);
+			response.sendStatus(200);
 		}
 	});
 }
