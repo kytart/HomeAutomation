@@ -6,6 +6,7 @@ export function route(
 	app: express.Application,
 	resolveTemperature: ResolveTemperatureCallback,
 ) {
+	app.use('/client', express.static('dist/client'));
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: true }));
 

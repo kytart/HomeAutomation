@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Client for monitoring and configuring home automation"/>
+    <title>Home Automation</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <h1 id="mainTitle">Home Automation</h1>
+      <div class="row">
+        <div class="col-sm">
+          <h3>Current Temperature</h3>
+          <p>Bedroom: 20°C</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          <h3>Change Mode</h3>
+          <button class="btn btn-danger">Day</button>
+          <button class="btn btn-primary">Night</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          <h3>Change Temperature Preset</h3>
+          <div class="form-group">
+            <label for="dayTemperature">Day: 20°C</label>
+            <input type="range" class="form-control-range" id="dayTemperature"/>
+          </div>
+          <div class="form-group">
+            <label for="nightTemperature">Night: 20°C</label>
+            <input type="range" class="form-control-range" id="nightTemperature"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" language="javascript" src="bundle.js"></script>
+  </body>
+</html>
