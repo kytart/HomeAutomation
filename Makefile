@@ -8,7 +8,7 @@ client: dist
 	cp static/* $(DIST_CLIENT)
 
 server: dist
-	webpack
+	webpack --config webpack.server.config.js
 
 dist:
 	mkdir -p $(DIST)

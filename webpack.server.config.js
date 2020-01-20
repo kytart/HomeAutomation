@@ -4,7 +4,7 @@ const path = require('path');
 const env = process.env.NODE_ENV || 'dev';
 
 module.exports = {
-    entry: './src/server',
+    entry: './src/server/server',
     target: 'node',
     mode: env === 'production' ? 'production' : 'development',
     node: {
