@@ -2,7 +2,7 @@
 
 ```
 docker build -t home-automation .
-docker run -d --restart unless-stopped --name home_automation -e HEATER_IPS='<ip1>,<ip2>' -p 8080:8080 home-automation
+docker run -d --restart unless-stopped --name home_automation -e HEATER_IPS='<ip1>,<ip2>' -p 8080:8080 -e TZ=<timezone> home-automation
 ```
 
 ## Temperature

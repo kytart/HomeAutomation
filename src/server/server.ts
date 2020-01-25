@@ -3,6 +3,7 @@ import * as express from 'express';
 import { route } from './routes';
 import SettingsStorage from './SettingsStorage';
 import { startThermostat } from './thermostat';
+import { startTimer } from './timer';
 
 const DEFAULT_PORT = 8080;
 const port = (process.env.PORT && process.env.PORT.toString()) || DEFAULT_PORT;
@@ -22,4 +23,5 @@ const persistSettingsPath = process.env.PERSIST_SETTINGS_PATH;
 	});
 
 	startThermostat(settings, heaterIps);
+	startTimer(settings);
 })();
