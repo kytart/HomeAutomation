@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import Thermostat, { Mode } from './Thermostat';
+import Thermostat from './Thermostat';
+import Mode from '../common/Mode';
 
 export function route(
 	app: express.Application,

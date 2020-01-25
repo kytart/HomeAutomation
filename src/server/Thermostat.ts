@@ -1,8 +1,7 @@
 import * as Debug from 'debug';
+import Mode from '../common/Mode';
 
 const debug = Debug('HomeAutomation:Thermostat');
-
-export enum Mode { DAY, NIGHT }
 
 export default class Thermostat {
 
