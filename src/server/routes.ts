@@ -53,13 +53,13 @@ export function route(
 		}
 	});
 
-	app.post('/desired-temperature', (request: express.Request, response: express.Response) => {
+	app.post('/desired-temperature', async (request: express.Request, response: express.Response) => {
 		const { mode: modeKey, desiredTemperature } = request.body;
 		const mode = Mode[modeKey as keyof typeof Mode];
 		if (typeof mode === 'undefined') {
 			response.sendStatus(400);
 		} else {
-			thermostat.setDesiredDayTemperature(mode, desiredTemperature);
+			await thermostat.setDesiredDayTemperature(mode, desiredTemperature);
 			response.sendStatus(200);
 		}
 	});

@@ -1,5 +1,6 @@
 import * as Debug from 'debug';
 import Mode from '../common/Mode';
+import SettingsStorage from './SettingsStorage';
 
 const debug = Debug('HomeAutomation:Thermostat');
 
@@ -9,6 +10,14 @@ export default class Thermostat {
 	private desiredDayTemperature: number = 20;
 	private desiredNightTemperature: number = 20;
 	private currentMode: Mode = Mode.DAY;
+
+	constructor(private storage: SettingsStorage) {}
+
+	public async loadSettingsFromStorage() {
+		const settings = await this.storage.getSettings();
+		this.desiredDayTemperature = settings.desiredDayTemperature;
+		this.desiredNightTemperature = settings.desiredNightTemperature;
+	}
 
 	public getTemperature() {
 		return this.temperature;
@@ -30,7 +39,7 @@ export default class Thermostat {
 		}
 	}
 
-	public setDesiredDayTemperature(mode: Mode, desiredTemperature: number) {
+	public async setDesiredDayTemperature(mode: Mode, desiredTemperature: number) {
 		debug(`set desured day temperature; mode: ${Mode[mode]}, desiredTemperature: ${desiredTemperature}`);
 		switch (mode) {
 			case Mode.DAY:
@@ -42,6 +51,7 @@ export default class Thermostat {
 			default:
 				throw new Error('invalid mode');
 		}
+		await this.persistSettings();
 	}
 
 	public getMode() {
@@ -51,5 +61,13 @@ export default class Thermostat {
 	public setMode(mode: Mode) {
 		debug(`set mode: ${Mode[mode]}`);
 		this.currentMode = mode;
+	}
+
+	private async persistSettings() {
+		const settings = {
+			desiredDayTemperature: this.desiredDayTemperature,
+			desiredNightTemperature: this.desiredNightTemperature,
+		};
+		await this.storage.persistSettings(settings);
 	}
 }
