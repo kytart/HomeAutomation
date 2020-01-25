@@ -15,7 +15,4 @@ export function startTimer(settings: Settings) {
 	job2.start();
 	job3.start();
 	job4.start();
-
-	console.log(new Date());
-	console.log(job2.nextDate().toDate())
 }
