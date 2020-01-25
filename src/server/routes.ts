@@ -1,18 +1,18 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import Thermostat from './Thermostat';
+import Settings from './Settings';
 import Mode from '../common/Mode';
 
 export function route(
 	app: express.Application,
-	thermostat: Thermostat,
+	settings: Settings,
 ) {
 	app.use('/client', express.static('dist/client'));
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: true }));
 
 	app.get('/temperature', (request: express.Request, response: express.Response) => {
-		const temperature = thermostat.getTemperature();
+		const temperature = settings.getTemperature();
 		response.send({ temperature });
 	});
 
@@ -21,13 +21,13 @@ export function route(
 		if (typeof temperature === 'undefined') {
 			response.sendStatus(400);
 		} else {
-			thermostat.setTemperature(temperature);
+			settings.setTemperature(temperature);
 			response.sendStatus(200);
 		}
 	});
 
 	app.get('/mode', (request: express.Request, response: express.Response) => {
-		const mode = thermostat.getMode();
+		const mode = settings.getMode();
 		response.send({ mode: Mode[mode] });
 	});
 
@@ -37,7 +37,7 @@ export function route(
 		if (typeof mode === 'undefined') {
 			response.sendStatus(400);
 		} else {
-			thermostat.setMode(mode);
+			settings.setMode(mode);
 			response.sendStatus(200);
 		}
 	});
@@ -48,7 +48,7 @@ export function route(
 		if (typeof mode === 'undefined') {
 			response.sendStatus(400);
 		} else {
-			const desiredTemperature = thermostat.getDesiredTemperature(mode);
+			const desiredTemperature = settings.getDesiredTemperature(mode);
 			response.send({ desiredTemperature });
 		}
 	});
@@ -59,7 +59,7 @@ export function route(
 		if (typeof mode === 'undefined') {
 			response.sendStatus(400);
 		} else {
-			await thermostat.setDesiredDayTemperature(mode, desiredTemperature);
+			await settings.setDesiredDayTemperature(mode, desiredTemperature);
 			response.sendStatus(200);
 		}
 	});

@@ -2,22 +2,18 @@ import * as Debug from 'debug';
 import Mode from '../common/Mode';
 import SettingsStorage from './SettingsStorage';
 
-const debug = Debug('HomeAutomation:Thermostat');
+const debug = Debug('HomeAutomation:Settings');
 
-export default class Thermostat {
+export default class Settings {
 
 	private temperature: number = 20;
-	private desiredDayTemperature: number = 20;
-	private desiredNightTemperature: number = 20;
 	private currentMode: Mode = Mode.DAY;
 
-	constructor(private storage: SettingsStorage) {}
-
-	public async loadSettingsFromStorage() {
-		const settings = await this.storage.getSettings();
-		this.desiredDayTemperature = settings.desiredDayTemperature;
-		this.desiredNightTemperature = settings.desiredNightTemperature;
-	}
+	constructor(
+		private storage: SettingsStorage,
+		private desiredDayTemperature: number,
+		private desiredNightTemperature: number,
+	) {}
 
 	public getTemperature() {
 		return this.temperature;
@@ -64,10 +60,9 @@ export default class Thermostat {
 	}
 
 	private async persistSettings() {
-		const settings = {
-			desiredDayTemperature: this.desiredDayTemperature,
-			desiredNightTemperature: this.desiredNightTemperature,
-		};
-		await this.storage.persistSettings(settings);
+		await this.storage.persistSettings(
+			this.desiredDayTemperature,
+			this.desiredNightTemperature,
+		);
 	}
 }

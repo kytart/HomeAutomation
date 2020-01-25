@@ -1,23 +1,24 @@
 import { readFile, writeFile } from 'fs-extra';
 import * as path from 'path';
-
-export interface ISettings {
-	desiredDayTemperature: number;
-	desiredNightTemperature: number;
-}
+import Settings from './Settings';
 
 export default class SettingsStorage {
 
 	constructor(private persistPath: string) {}
 
-	public async getSettings(): Promise<ISettings> {
+	public async getSettings(): Promise<Settings> {
 		const filePath = this.getSettingsFilePath();
 		const contents = await readFile(filePath);
-		return JSON.parse(contents.toString());
+		const settings = JSON.parse(contents.toString());
+		return new Settings(this, settings.desiredDayTemperature, settings.desiredNightTemperature);
 	}
 
-	public async persistSettings(settings: ISettings) {
+	public async persistSettings(
+		desiredDayTemperature: number,
+		desiredNightTemperature: number,
+	) {
 		const filePath = this.getSettingsFilePath();
+		const settings = { desiredDayTemperature, desiredNightTemperature };
 		await writeFile(filePath, JSON.stringify(settings));
 	}
 
