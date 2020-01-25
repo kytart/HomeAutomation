@@ -7,10 +7,15 @@ export default class SettingsStorage {
 	constructor(private persistPath: string) {}
 
 	public async getSettings(): Promise<Settings> {
-		const filePath = this.getSettingsFilePath();
-		const contents = await readFile(filePath);
-		const settings = JSON.parse(contents.toString());
-		return new Settings(this, settings.desiredDayTemperature, settings.desiredNightTemperature);
+		try {
+			const filePath = this.getSettingsFilePath();
+			const contents = await readFile(filePath);
+			const settings = JSON.parse(contents.toString());
+			return new Settings(this, settings.desiredDayTemperature, settings.desiredNightTemperature);
+		} catch (error) {
+			const DEFAULT_TEMPERATURE = 20;
+			return new Settings(this, DEFAULT_TEMPERATURE, DEFAULT_TEMPERATURE);
+		}
 	}
 
 	public async persistSettings(
