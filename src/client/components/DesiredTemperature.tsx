@@ -11,6 +11,7 @@ export interface IProps {
 interface IState {
 	currentValue?: number;
 	pendingUpdate: boolean;
+	interval?: any;
 }
 
 export default class DesiredTemperature extends React.PureComponent<IProps, IState> {
@@ -21,7 +22,14 @@ export default class DesiredTemperature extends React.PureComponent<IProps, ISta
 
 	public async componentDidMount() {
 		const currentValue = await getDesiredTemperature(this.props.mode);
-		this.setState({ currentValue });
+		const interval = setInterval(() => this.refreshCurrentValue(), 10e3);
+		this.setState({ currentValue, interval });
+	}
+
+	public componentWillUnmount() {
+		if (typeof this.state.interval !== 'undefined') {
+			clearInterval(this.state.interval);
+		}
 	}
 
 	public render() {
@@ -42,6 +50,11 @@ export default class DesiredTemperature extends React.PureComponent<IProps, ISta
 				/>
 			</div>
 		);
+	}
+
+	private async refreshCurrentValue() {
+		const currentValue = await getDesiredTemperature(this.props.mode);
+		this.setState({ currentValue });
 	}
 
 	private async onChange(event: React.ChangeEvent<HTMLInputElement>) {

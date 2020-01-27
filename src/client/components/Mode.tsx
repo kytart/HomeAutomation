@@ -5,6 +5,7 @@ import { getCurrentMode, setMode } from '../api';
 interface IState {
 	currentMode?: ModeType,
 	pendingUpdate: boolean;
+	interval?: any;
 }
 
 export default class Mode extends React.PureComponent<{}, IState> {
@@ -15,7 +16,14 @@ export default class Mode extends React.PureComponent<{}, IState> {
 
 	public async componentDidMount() {
 		const currentMode = await getCurrentMode();
-		this.setState({ currentMode });
+		const interval = setInterval(() => this.refreshMode(), 10e3);
+		this.setState({ currentMode, interval });
+	}
+
+	public componentWillUnmount() {
+		if (typeof this.state.interval !== 'undefined') {
+			clearInterval(this.state.interval);
+		}
 	}
 
 	public render() {
@@ -36,6 +44,11 @@ export default class Mode extends React.PureComponent<{}, IState> {
 				</div>
 			</div>
 		);
+	}
+
+	private async refreshMode() {
+		const currentMode = await getCurrentMode();
+		this.setState({ currentMode });
 	}
 
 	private async setMode(mode: ModeType) {
