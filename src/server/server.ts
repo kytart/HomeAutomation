@@ -4,6 +4,7 @@ import { route } from './routes';
 import SettingsStorage from './SettingsStorage';
 import { startThermostat } from './thermostat';
 import { startTimer } from './timer';
+import rooms from '../common/rooms';
 
 process.on('uncaughtException', (error: any) => console.error(error && error.stack ? error.stack : error));
 process.on('unhandledRejection', (error: Error) => {
@@ -12,7 +13,6 @@ process.on('unhandledRejection', (error: Error) => {
 
 const DEFAULT_PORT = 8080;
 const port = (process.env.PORT && process.env.PORT.toString()) || DEFAULT_PORT;
-const heaterIps = process.env.HEATER_IPS.split(',');
 const persistSettingsPath = process.env.PERSIST_SETTINGS_PATH;
 
 (async () => {
@@ -27,6 +27,8 @@ const persistSettingsPath = process.env.PERSIST_SETTINGS_PATH;
 		console.info('Http server listening on port ' + port);
 	});
 
-	startThermostat(settings, heaterIps);
+	for (let room of rooms) {
+		startThermostat(settings, room.key);
+	}
 	startTimer(settings);
 })();

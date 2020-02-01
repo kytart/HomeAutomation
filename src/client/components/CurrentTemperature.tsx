@@ -1,17 +1,22 @@
 import * as React from 'react';
 import { getCurrentTemperature } from '../api';
 
+interface IProps {
+	room: string;
+	label: string;
+}
+
 interface IState {
 	temperature?: number;
 	interval?: any;
 }
 
-export default class CurrentTemperature extends React.PureComponent<{}, IState> {
+export default class CurrentTemperature extends React.PureComponent<IProps, IState> {
 
 	public state: IState = {};
 
 	public async componentDidMount() {
-		const temperature = await getCurrentTemperature();
+		const temperature = await getCurrentTemperature(this.props.room);
 		const interval = setInterval(() => this.refreshTemperature(), 10e3);
 		this.setState({
 			temperature,
@@ -26,20 +31,17 @@ export default class CurrentTemperature extends React.PureComponent<{}, IState> 
 	}
 
 	public render() {
-		return (
-			<div className="row">
-				<div className="col-sm">
-					<h3>Current Temperature</h3>
-					{typeof this.state.temperature !== 'undefined' && (
-						<p>Bedroom: {this.state.temperature}°C</p>
-					)}
-				</div>
-			</div>
-		);
+		if (typeof this.state.temperature !== 'undefined') {
+			return (
+				<p>{this.props.label}: {this.state.temperature}°C</p>
+			);
+		} else {
+			return null;
+		}
 	}
 
 	private async refreshTemperature() {
-		const temperature = await getCurrentTemperature();
+		const temperature = await getCurrentTemperature(this.props.room);
 		this.setState({ temperature });
 	}
 }

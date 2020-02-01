@@ -1,7 +1,8 @@
 import Mode from '../common/Mode';
 
-export async function getCurrentTemperature(): Promise<number> {
-	const response = await fetch('/temperature');
+export async function getCurrentTemperature(room: string): Promise<number> {
+	const query = `room=${room}`;
+	const response = await fetch('/temperature?' + query);
 	const body = await response.json();
 	return body.temperature;
 }

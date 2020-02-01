@@ -6,7 +6,7 @@ const debug = Debug('HomeAutomation:Settings');
 
 export default class Settings {
 
-	private temperature: number = 20;
+	private temperatures: { [room: string]: number } = {};
 	private currentMode: Mode = Mode.DAY;
 
 	constructor(
@@ -15,13 +15,15 @@ export default class Settings {
 		private desiredNightTemperature: number,
 	) {}
 
-	public getTemperature() {
-		return this.temperature;
+	public getTemperature(room: string) {
+		const DEFAULT_TEMPERATURE = 20;
+		const temperature = this.temperatures[room];
+		return typeof temperature !== 'undefined' ? temperature : DEFAULT_TEMPERATURE;
 	}
 
-	public setTemperature(temperature: number) {
-		this.temperature = temperature;
-		debug('set temperature: ' + temperature);
+	public setTemperature(room: string, temperature: number) {
+		this.temperatures[room] = temperature;
+		debug(`set temperature ${temperature} in ${room}`);
 	}
 
 	public getDesiredTemperature(mode: Mode) {

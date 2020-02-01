@@ -12,16 +12,21 @@ export function route(
 	app.use(bodyParser.urlencoded({ extended: true }));
 
 	app.get('/temperature', (request: express.Request, response: express.Response) => {
-		const temperature = settings.getTemperature();
-		response.send({ temperature });
+		const { room } = request.query;
+		if (typeof room === 'undefined') {
+			response.sendStatus(400);
+		} else {
+			const temperature = settings.getTemperature(room);
+			response.send({ temperature });
+		}
 	});
 
 	app.post('/temperature', (request: express.Request, response: express.Response) => {
-		const { temperature } = request.body;
-		if (typeof temperature === 'undefined') {
+		const { room, temperature } = request.body;
+		if (typeof room === 'undefined' || typeof temperature === 'undefined') {
 			response.sendStatus(400);
 		} else {
-			settings.setTemperature(temperature);
+			settings.setTemperature(room, temperature);
 			response.sendStatus(200);
 		}
 	});
