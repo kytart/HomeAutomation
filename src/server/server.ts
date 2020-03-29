@@ -3,7 +3,7 @@ import * as express from 'express';
 import { route } from './routes';
 import SettingsStorage from './SettingsStorage';
 import { startThermostat } from './thermostat';
-import { startTimer } from './timer';
+import Timer from './Timer';
 import rooms from '../common/rooms';
 
 process.on('uncaughtException', (error: any) => console.error(error && error.stack ? error.stack : error));
@@ -20,6 +20,7 @@ const persistSettingsPath = process.env.PERSIST_SETTINGS_PATH;
 	const httpServer = http.createServer(app);
 	const storage = new SettingsStorage(persistSettingsPath);
 	const settings = await storage.getSettings();
+	const timer = new Timer(settings);
 
 	route(app, settings);
 
@@ -30,5 +31,5 @@ const persistSettingsPath = process.env.PERSIST_SETTINGS_PATH;
 	for (let room of rooms) {
 		startThermostat(settings, room.key);
 	}
-	startTimer(settings);
+	timer.applySchedules();
 })();

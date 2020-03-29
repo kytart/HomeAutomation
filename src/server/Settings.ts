@@ -1,6 +1,8 @@
 import * as Debug from 'debug';
+import { EventEmitter } from 'events';
 import Mode from '../common/Mode';
 import SettingsStorage from './SettingsStorage';
+import { ISchedule, convertScheduleToLoggableObject, areSchedulesEqual } from './schedule';
 
 const debug = Debug('HomeAutomation:Settings');
 
@@ -8,12 +10,16 @@ export default class Settings {
 
 	private temperatures: { [room: string]: number } = {};
 	private currentMode: Mode = Mode.DAY;
+	private eventEmitter: EventEmitter;
 
 	constructor(
 		private storage: SettingsStorage,
 		private desiredDayTemperature: number,
 		private desiredNightTemperature: number,
-	) {}
+		private schedules: ISchedule[],
+	) {
+		this.eventEmitter = new EventEmitter();
+	}
 
 	public getTemperature(room: string) {
 		const DEFAULT_TEMPERATURE = 20;
@@ -61,10 +67,32 @@ export default class Settings {
 		this.currentMode = mode;
 	}
 
+	public getSchedules() {
+		return this.schedules;
+	}
+
+	public async addSchedule(schedule: ISchedule) {
+		debug('add schedule', convertScheduleToLoggableObject(schedule));
+		this.schedules.push(schedule);
+		await this.persistSettings();
+		this.eventEmitter.emit('schedules_changed');
+	}
+
+	public async removeSchedule(schedule: ISchedule) {
+		this.schedules = this.schedules.filter((item) => !areSchedulesEqual(item, schedule));
+		await this.persistSettings();
+		this.eventEmitter.emit('schedules_changed');
+	}
+
+	public onSchedulesChange(listener: () => void) {
+		this.eventEmitter.addListener('schedules_changed', listener);
+	}
+
 	private async persistSettings() {
 		await this.storage.persistSettings(
 			this.desiredDayTemperature,
 			this.desiredNightTemperature,
+			this.schedules,
 		);
 	}
 }
