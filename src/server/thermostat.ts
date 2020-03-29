@@ -4,14 +4,9 @@ import * as Debug from 'debug';
 
 const debug = Debug('HomeAutomation:thermostat');
 
-export function startThermostat(settings: Settings, room: string) {
+export async function resolveCurrentTemperature(settings: Settings, room: string) {
 	const heaterIpsEnvKey = `${room}_heater_ips`;
 	const heaterIps = process.env[heaterIpsEnvKey].split(',');
-	debug(`starting thermostat; room: ${room}, heater ips: ${heaterIps.join(', ')}`);
-	setInterval(() => resolveCurrentSettings(settings, room, heaterIps), 60e3);
-}
-
-async function resolveCurrentSettings(settings: Settings, room: string, heaterIps: string[]) {
 	const currentTemperature = settings.getTemperature(room);
 	const mode = settings.getMode();
 	const desiredTemperature = settings.getDesiredTemperature(mode);

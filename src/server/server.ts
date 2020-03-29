@@ -2,7 +2,7 @@ import * as http from 'http';
 import * as express from 'express';
 import { route } from './routes';
 import SettingsStorage from './SettingsStorage';
-import { startThermostat } from './thermostat';
+import { resolveCurrentTemperature } from './thermostat';
 import Timer from './Timer';
 import rooms from '../common/rooms';
 
@@ -28,8 +28,12 @@ const persistSettingsPath = process.env.PERSIST_SETTINGS_PATH;
 		console.info('Http server listening on port ' + port);
 	});
 
-	for (let room of rooms) {
-		startThermostat(settings, room.key);
-	}
+	settings.onRoomSettingsChange((room: string) => resolveCurrentTemperature(settings, room));
+	settings.onSettingsChange(() => {
+		for (let room of rooms) {
+			resolveCurrentTemperature(settings, room.key);
+		}
+	});
+
 	timer.applySchedules();
 })();

@@ -30,6 +30,7 @@ export default class Settings {
 	public setTemperature(room: string, temperature: number) {
 		this.temperatures[room] = temperature;
 		debug(`set temperature ${temperature} in ${room}`);
+		this.eventEmitter.emit('room_settings_changed', room);
 	}
 
 	public getDesiredTemperature(mode: Mode) {
@@ -56,6 +57,7 @@ export default class Settings {
 				throw new Error('invalid mode');
 		}
 		await this.persistSettings();
+		this.eventEmitter.emit('settings_changed');
 	}
 
 	public getMode() {
@@ -65,6 +67,7 @@ export default class Settings {
 	public setMode(mode: Mode) {
 		debug(`set mode: ${Mode[mode]}`);
 		this.currentMode = mode;
+		this.eventEmitter.emit('settings_changed');
 	}
 
 	public getSchedules() {
@@ -82,6 +85,14 @@ export default class Settings {
 		this.schedules = this.schedules.filter((item) => !areSchedulesEqual(item, schedule));
 		await this.persistSettings();
 		this.eventEmitter.emit('schedules_changed');
+	}
+
+	public onSettingsChange(listener: () => void) {
+		this.eventEmitter.addListener('settings_changed', listener);
+	}
+
+	public onRoomSettingsChange(listener: (room: string) => void) {
+		this.eventEmitter.addListener('room_settings_changed', listener);
 	}
 
 	public onSchedulesChange(listener: () => void) {
