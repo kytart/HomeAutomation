@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getCurrentTemperature } from '../api';
+import { getCurrentTemperature, TemperatureRecord } from '../api';
 
 interface IProps {
 	room: string;
@@ -7,7 +7,7 @@ interface IProps {
 }
 
 interface IState {
-	temperature?: number;
+	temperature?: TemperatureRecord | null;
 	interval?: any;
 }
 
@@ -32,8 +32,18 @@ export default class CurrentTemperature extends React.PureComponent<IProps, ISta
 
 	public render() {
 		if (typeof this.state.temperature !== 'undefined') {
+			const temperature = this.state.temperature;
 			return (
-				<p>{this.props.label}: {this.state.temperature}°C</p>
+				<p>
+					{this.props.label}:{' '}
+					{temperature
+						? [
+							<span>{temperature.temperature}</span>,
+							' ',
+							<span className="tempRecordedAt">({temperature.recordedAt.toLocaleString()})</span>,
+						] : 'never'
+					}
+				</p>
 			);
 		} else {
 			return null;

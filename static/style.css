@@ -5,3 +5,7 @@
 .row {
     margin-bottom: 30px;
 }
+
+.tempRecordedAt {
+    font-style: italic;
+}

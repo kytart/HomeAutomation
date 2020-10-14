@@ -1,10 +1,22 @@
 import Mode from '../common/Mode';
 
-export async function getCurrentTemperature(room: string): Promise<number> {
+export interface TemperatureRecord {
+	temperature: number;
+	recordedAt: Date;
+}
+
+export async function getCurrentTemperature(room: string): Promise<TemperatureRecord | null> {
 	const query = `room=${room}`;
 	const response = await fetch('/temperature?' + query);
 	const body = await response.json();
-	return body.temperature;
+	if (body.recordedAt > 0) {
+		return {
+			temperature: body.temperature,
+			recordedAt: new Date(body.recordedAt),
+		};
+	} else {
+		return null;
+	}
 }
 
 export async function getCurrentMode(): Promise<Mode> {

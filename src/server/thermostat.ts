@@ -7,7 +7,7 @@ const debug = Debug('HomeAutomation:thermostat');
 export async function resolveCurrentTemperature(settings: Settings, room: string) {
 	const heaterIpsEnvKey = `${room}_heater_ips`;
 	const heaterIps = process.env[heaterIpsEnvKey].split(',');
-	const currentTemperature = settings.getTemperature(room);
+	const currentTemperature = settings.getTemperature(room).temperature;
 	const mode = settings.getMode();
 	const desiredTemperature = settings.getDesiredTemperature(mode);
 	if (currentTemperature > desiredTemperature) {

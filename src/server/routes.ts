@@ -18,7 +18,10 @@ export function route(
 			response.sendStatus(400);
 		} else {
 			const temperature = settings.getTemperature(room);
-			response.send({ temperature });
+			response.send({
+				temperature: temperature.temperature,
+				recordedAt: temperature.recordedAt.valueOf(),
+			});
 		}
 	});
 

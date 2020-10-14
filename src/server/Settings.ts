@@ -6,9 +6,14 @@ import { ISchedule, convertScheduleToLoggableObject, areSchedulesEqual } from '.
 
 const debug = Debug('HomeAutomation:Settings');
 
+interface TemperatureRecord {
+	temperature: number;
+	recordedAt: Date;
+}
+
 export default class Settings {
 
-	private temperatures: { [room: string]: number } = {};
+	private temperatures: { [room: string]: TemperatureRecord } = {};
 	private currentMode: Mode = Mode.DAY;
 	private eventEmitter: EventEmitter;
 
@@ -21,14 +26,20 @@ export default class Settings {
 		this.eventEmitter = new EventEmitter();
 	}
 
-	public getTemperature(room: string) {
-		const DEFAULT_TEMPERATURE = 20;
+	public getTemperature(room: string): TemperatureRecord {
+		const DEFAULT_TEMPERATURE: TemperatureRecord = {
+			temperature: 20,
+			recordedAt: new Date(0),
+		};
 		const temperature = this.temperatures[room];
 		return typeof temperature !== 'undefined' ? temperature : DEFAULT_TEMPERATURE;
 	}
 
 	public setTemperature(room: string, temperature: number) {
-		this.temperatures[room] = temperature;
+		this.temperatures[room] = {
+			temperature,
+			recordedAt: new Date(),
+		};
 		debug(`set temperature ${temperature} in ${room}`);
 		this.eventEmitter.emit('room_settings_changed', room);
 	}
